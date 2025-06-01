@@ -4,6 +4,8 @@ const generateBtn = document.getElementById('generateBtn');
 const svgPreview = document.getElementById('svgPreview');
 const sizeSlider = document.getElementById('sizeSlider');
 const sizeDisplay = document.getElementById('sizeDisplay');
+const strokeSlider = document.getElementById('strokeSlider');
+const strokeDisplay = document.getElementById('strokeDisplay');
 const colorPicker = document.getElementById('colorPicker');
 const downloadSvgBtn = document.getElementById('downloadSvgBtn');
 const copySvgBtn = document.getElementById('copySvgBtn');
@@ -16,12 +18,11 @@ let currentSvg = null;
 let currentPrompt = '';
 
 // Featherアイコンスタイルに基づいてSVG要素を生成する関数
-function generateFeatherStyleIcon(prompt) {
+function generateFeatherStyleIcon(prompt, strokeWidth = 2) {
     const promptLower = prompt.toLowerCase();
     const elements = [];
     
     // Featherアイコンの基本設定
-    const strokeWidth = 2;
     const viewBox = '0 0 24 24';
     
     // キーワードに基づいてFeatherスタイルのSVG要素を生成
@@ -583,8 +584,8 @@ function createSvgElement(element) {
 }
 
 // SVGを生成
-function generateSvg(prompt, size, color) {
-    const iconData = generateFeatherStyleIcon(prompt);
+function generateSvg(prompt, size, color, strokeWidth = 2) {
+    const iconData = generateFeatherStyleIcon(prompt, strokeWidth);
     
     const elements = iconData.elements.map(element => {
         return '            ' + createSvgElement(element);
@@ -596,7 +597,7 @@ function generateSvg(prompt, size, color) {
          viewBox="${iconData.viewBox}" 
          fill="none" 
          stroke="${color}" 
-         stroke-width="${iconData.strokeWidth}" 
+         stroke-width="${strokeWidth}" 
          stroke-linecap="round" 
          stroke-linejoin="round">
 ${elements}
@@ -624,8 +625,9 @@ generateBtn.addEventListener('click', () => {
     currentPrompt = prompt;
     const size = parseInt(sizeSlider.value);
     const color = colorPicker.value;
+    const strokeWidth = parseFloat(strokeSlider.value);
     
-    currentSvg = generateSvg(prompt, size, color);
+    currentSvg = generateSvg(prompt, size, color, strokeWidth);
     displaySvg(currentSvg);
 });
 
@@ -636,7 +638,21 @@ sizeSlider.addEventListener('input', (e) => {
     
     if (currentSvg && currentPrompt) {
         const color = colorPicker.value;
-        currentSvg = generateSvg(currentPrompt, size, color);
+        const strokeWidth = parseFloat(strokeSlider.value);
+        currentSvg = generateSvg(currentPrompt, size, color, strokeWidth);
+        displaySvg(currentSvg);
+    }
+});
+
+// 線の太さ変更
+strokeSlider.addEventListener('input', (e) => {
+    const strokeWidth = e.target.value;
+    strokeDisplay.textContent = `${strokeWidth}px`;
+    
+    if (currentSvg && currentPrompt) {
+        const size = parseInt(sizeSlider.value);
+        const color = colorPicker.value;
+        currentSvg = generateSvg(currentPrompt, size, color, parseFloat(strokeWidth));
         displaySvg(currentSvg);
     }
 });
@@ -646,7 +662,8 @@ colorPicker.addEventListener('input', (e) => {
     if (currentSvg && currentPrompt) {
         const size = parseInt(sizeSlider.value);
         const color = e.target.value;
-        currentSvg = generateSvg(currentPrompt, size, color);
+        const strokeWidth = parseFloat(strokeSlider.value);
+        currentSvg = generateSvg(currentPrompt, size, color, strokeWidth);
         displaySvg(currentSvg);
     }
 });
@@ -688,7 +705,8 @@ regenerateBtn.addEventListener('click', () => {
     if (currentPrompt) {
         const size = parseInt(sizeSlider.value);
         const color = colorPicker.value;
-        currentSvg = generateSvg(currentPrompt, size, color);
+        const strokeWidth = parseFloat(strokeSlider.value);
+        currentSvg = generateSvg(currentPrompt, size, color, strokeWidth);
         displaySvg(currentSvg);
     }
 });
