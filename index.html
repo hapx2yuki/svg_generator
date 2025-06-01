@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SVG Icon Generator - Font Awesome風アイコン生成ツール</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <div class="container mx-auto px-4 py-8 max-w-4xl">
+        <header class="text-center mb-12">
+            <h1 class="text-4xl font-bold text-gray-800 mb-2">🎨 SVG Icon Generator</h1>
+            <p class="text-gray-600">Font Awesome風のシンプルなアイコンを生成します</p>
+        </header>
+
+        <main class="space-y-8">
+            <section class="bg-white rounded-lg shadow-md p-6">
+                <label for="prompt" class="block text-sm font-medium text-gray-700 mb-2">
+                    アイコンの説明を入力してください：
+                </label>
+                <textarea 
+                    id="prompt" 
+                    placeholder="例: ショッピングカート、ハート、星、矢印、円、三角形、メール、電話、カメラ..."
+                    rows="3"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                ></textarea>
+                <button id="generateBtn" class="mt-4 w-full bg-blue-600 text-white font-medium py-2 px-4 rounded-md hover:bg-blue-700 transition duration-200">
+                    アイコンを生成
+                </button>
+            </section>
+
+            <section class="bg-white rounded-lg shadow-md p-6">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">プレビュー</h2>
+                <div class="flex justify-center items-center bg-gray-100 rounded-lg p-8 mb-6">
+                    <div id="svgPreview" class="svg-preview">
+                        <p class="text-gray-400">ここに生成されたアイコンが表示されます</p>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="space-y-2">
+                        <label class="block text-sm font-medium text-gray-700">サイズ調整：</label>
+                        <div class="flex items-center space-x-4">
+                            <input type="range" id="sizeSlider" min="24" max="256" value="64" class="flex-1">
+                            <span id="sizeDisplay" class="text-sm font-medium text-gray-600 min-w-[50px]">64px</span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="block text-sm font-medium text-gray-700">色：</label>
+                        <input type="color" id="colorPicker" value="#000000" class="h-10 w-full rounded cursor-pointer">
+                    </div>
+                </div>
+            </section>
+
+            <section id="actionsSection" class="bg-white rounded-lg shadow-md p-6 hidden">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <button id="downloadSvgBtn" class="bg-green-600 text-white font-medium py-2 px-4 rounded-md hover:bg-green-700 transition duration-200">
+                        SVGをダウンロード
+                    </button>
+                    <button id="copySvgBtn" class="bg-purple-600 text-white font-medium py-2 px-4 rounded-md hover:bg-purple-700 transition duration-200">
+                        SVGコードをコピー
+                    </button>
+                    <button id="regenerateBtn" class="bg-gray-600 text-white font-medium py-2 px-4 rounded-md hover:bg-gray-700 transition duration-200">
+                        再生成
+                    </button>
+                </div>
+            </section>
+
+            <section id="codeSection" class="bg-white rounded-lg shadow-md p-6 hidden">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">SVGコード</h3>
+                <pre class="bg-gray-100 p-4 rounded-md overflow-x-auto"><code id="svgCode" class="text-sm text-gray-800"></code></pre>
+            </section>
+        </main>
+
+        <footer class="text-center mt-12 text-gray-600">
+            <p>Created with ❤️ | <a href="https://github.com/hapx2yuki/svg_generator" target="_blank" class="text-blue-600 hover:underline">GitHub</a></p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
