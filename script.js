@@ -16,6 +16,7 @@ const codeSection = document.getElementById('codeSection');
 
 let currentSvg = null;
 let currentPrompt = '';
+let realtimeTimer = null;
 
 // Featherアイコンスタイルに基づいてSVG要素を生成する関数
 function generateFeatherStyleIcon(prompt, strokeWidth = 2) {
@@ -492,6 +493,447 @@ function generateFeatherStyleIcon(prompt, strokeWidth = 2) {
             cy: 19,
             r: 1
         });
+    } else if (promptLower.includes('恐竜') || promptLower.includes('dinosaur') || promptLower.includes('ティラノ') || promptLower.includes('t-rex')) {
+        // 恐竜のFeather風アイコン
+        // 頭
+        elements.push({
+            type: 'ellipse',
+            cx: 8,
+            cy: 8,
+            rx: 4,
+            ry: 3
+        });
+        // 体
+        elements.push({
+            type: 'ellipse',
+            cx: 15,
+            cy: 12,
+            rx: 6,
+            ry: 4
+        });
+        // 尻尾
+        elements.push({
+            type: 'path',
+            d: 'M21 12 Q24 10 22 6'
+        });
+        // 前足
+        elements.push({
+            type: 'line',
+            x1: 11,
+            y1: 15,
+            x2: 10,
+            y2: 19
+        });
+        // 後ろ足
+        elements.push({
+            type: 'line',
+            x1: 17,
+            y1: 15,
+            x2: 16,
+            y2: 20
+        });
+        // 首
+        elements.push({
+            type: 'line',
+            x1: 8,
+            y1: 11,
+            x2: 11,
+            y2: 9
+        });
+        // 目
+        elements.push({
+            type: 'circle',
+            cx: 6,
+            cy: 7,
+            r: 0.5
+        });
+    } else if (promptLower.includes('忍者') || promptLower.includes('ninja') || promptLower.includes('手裏剣')) {
+        // 忍者のFeather風アイコン
+        // 頭（丸い）
+        elements.push({
+            type: 'circle',
+            cx: 12,
+            cy: 7,
+            r: 3
+        });
+        // 体
+        elements.push({
+            type: 'rect',
+            x: 10,
+            y: 10,
+            width: 4,
+            height: 8
+        });
+        // 腕（左）
+        elements.push({
+            type: 'line',
+            x1: 10,
+            y1: 12,
+            x2: 7,
+            y2: 14
+        });
+        // 腕（右）
+        elements.push({
+            type: 'line',
+            x1: 14,
+            y1: 12,
+            x2: 17,
+            y2: 14
+        });
+        // 脚（左）
+        elements.push({
+            type: 'line',
+            x1: 11,
+            y1: 18,
+            x2: 9,
+            y2: 22
+        });
+        // 脚（右）
+        elements.push({
+            type: 'line',
+            x1: 13,
+            y1: 18,
+            x2: 15,
+            y2: 22
+        });
+        // 目（スリット）
+        elements.push({
+            type: 'line',
+            x1: 10.5,
+            y1: 6.5,
+            x2: 11.5,
+            y2: 6.5
+        });
+        elements.push({
+            type: 'line',
+            x1: 12.5,
+            y1: 6.5,
+            x2: 13.5,
+            y2: 6.5
+        });
+        // 手裏剣（手に持つ）
+        elements.push({
+            type: 'polygon',
+            points: '6 13 7 14 6 15 5 14'
+        });
+    } else if (promptLower.includes('弓矢') || promptLower.includes('bow') || promptLower.includes('arrow') || promptLower.includes('弓')) {
+        // 弓矢のFeather風アイコン
+        // 弓の本体
+        elements.push({
+            type: 'path',
+            d: 'M6 4 Q2 12 6 20'
+        });
+        // 弦
+        elements.push({
+            type: 'line',
+            x1: 6,
+            y1: 4,
+            x2: 6,
+            y2: 20
+        });
+        // 矢
+        elements.push({
+            type: 'line',
+            x1: 6,
+            y1: 12,
+            x2: 20,
+            y2: 12
+        });
+        // 矢じり
+        elements.push({
+            type: 'polygon',
+            points: '20 12 18 10 18 11 17 11 17 13 18 13 18 14'
+        });
+        // 矢羽
+        elements.push({
+            type: 'polygon',
+            points: '8 10 10 11 8 12 6 11'
+        });
+        elements.push({
+            type: 'polygon',
+            points: '8 12 10 13 8 14 6 13'
+        });
+    } else if (promptLower.includes('城') || promptLower.includes('castle') || promptLower.includes('お城')) {
+        // 城のFeather風アイコン
+        // 基盤
+        elements.push({
+            type: 'rect',
+            x: 4,
+            y: 16,
+            width: 16,
+            height: 6
+        });
+        // メインタワー
+        elements.push({
+            type: 'rect',
+            x: 8,
+            y: 8,
+            width: 8,
+            height: 8
+        });
+        // 左タワー
+        elements.push({
+            type: 'rect',
+            x: 4,
+            y: 12,
+            width: 4,
+            height: 4
+        });
+        // 右タワー
+        elements.push({
+            type: 'rect',
+            x: 16,
+            y: 12,
+            width: 4,
+            height: 4
+        });
+        // 屋根（中央）
+        elements.push({
+            type: 'polygon',
+            points: '8 8 12 4 16 8'
+        });
+        // 旗
+        elements.push({
+            type: 'line',
+            x1: 12,
+            y1: 4,
+            x2: 12,
+            y2: 2
+        });
+        elements.push({
+            type: 'polygon',
+            points: '12 2 14 3 12 4'
+        });
+    } else if (promptLower.includes('剣') || promptLower.includes('sword') || promptLower.includes('刀')) {
+        // 剣のFeather風アイコン
+        // 刃
+        elements.push({
+            type: 'line',
+            x1: 12,
+            y1: 2,
+            x2: 12,
+            y2: 16
+        });
+        // 鍔（つば）
+        elements.push({
+            type: 'line',
+            x1: 9,
+            y1: 16,
+            x2: 15,
+            y2: 16
+        });
+        // 柄
+        elements.push({
+            type: 'line',
+            x1: 12,
+            y1: 16,
+            x2: 12,
+            y2: 20
+        });
+        // 柄頭
+        elements.push({
+            type: 'circle',
+            cx: 12,
+            cy: 21,
+            r: 1
+        });
+        // 刃の輪郭
+        elements.push({
+            type: 'line',
+            x1: 11,
+            y1: 3,
+            x2: 12,
+            y2: 2
+        });
+        elements.push({
+            type: 'line',
+            x1: 13,
+            y1: 3,
+            x2: 12,
+            y2: 2
+        });
+    } else if (promptLower.includes('魔法') || promptLower.includes('magic') || promptLower.includes('杖') || promptLower.includes('wand')) {
+        // 魔法杖のFeather風アイコン
+        // 杖
+        elements.push({
+            type: 'line',
+            x1: 6,
+            y1: 20,
+            x2: 18,
+            y2: 8
+        });
+        // 先端の宝石
+        elements.push({
+            type: 'polygon',
+            points: '18 8 20 6 18 4 16 6'
+        });
+        // 魔法のきらめき
+        elements.push({
+            type: 'line',
+            x1: 15,
+            y1: 5,
+            x2: 17,
+            y2: 3
+        });
+        elements.push({
+            type: 'line',
+            x1: 16,
+            y1: 4,
+            x2: 16,
+            y2: 4
+        });
+        elements.push({
+            type: 'line',
+            x1: 20,
+            y1: 8,
+            x2: 22,
+            y2: 6
+        });
+        elements.push({
+            type: 'line',
+            x1: 19,
+            y1: 10,
+            x2: 21,
+            y2: 12
+        });
+    } else if (promptLower.includes('宇宙') || promptLower.includes('space') || promptLower.includes('惑星') || promptLower.includes('planet')) {
+        // 宇宙・惑星のFeather風アイコン
+        // 惑星
+        elements.push({
+            type: 'circle',
+            cx: 12,
+            cy: 12,
+            r: 6
+        });
+        // 輪
+        elements.push({
+            type: 'ellipse',
+            cx: 12,
+            cy: 12,
+            rx: 9,
+            ry: 3
+        });
+        // 星（背景）
+        elements.push({
+            type: 'circle',
+            cx: 6,
+            cy: 6,
+            r: 0.5
+        });
+        elements.push({
+            type: 'circle',
+            cx: 19,
+            cy: 8,
+            r: 0.5
+        });
+        elements.push({
+            type: 'circle',
+            cx: 20,
+            cy: 16,
+            r: 0.5
+        });
+        elements.push({
+            type: 'circle',
+            cx: 4,
+            cy: 18,
+            r: 0.5
+        });
+    } else if (promptLower.includes('ロボット') || promptLower.includes('robot') || promptLower.includes('機械')) {
+        // ロボットのFeather風アイコン
+        // 頭
+        elements.push({
+            type: 'rect',
+            x: 9,
+            y: 4,
+            width: 6,
+            height: 5,
+            rx: 1
+        });
+        // 体
+        elements.push({
+            type: 'rect',
+            x: 8,
+            y: 9,
+            width: 8,
+            height: 8,
+            rx: 1
+        });
+        // 腕（左）
+        elements.push({
+            type: 'rect',
+            x: 5,
+            y: 11,
+            width: 3,
+            height: 4,
+            rx: 1
+        });
+        // 腕（右）
+        elements.push({
+            type: 'rect',
+            x: 16,
+            y: 11,
+            width: 3,
+            height: 4,
+            rx: 1
+        });
+        // 脚（左）
+        elements.push({
+            type: 'rect',
+            x: 9,
+            y: 17,
+            width: 2,
+            height: 4,
+            rx: 1
+        });
+        // 脚（右）
+        elements.push({
+            type: 'rect',
+            x: 13,
+            y: 17,
+            width: 2,
+            height: 4,
+            rx: 1
+        });
+        // 目
+        elements.push({
+            type: 'circle',
+            cx: 11,
+            cy: 6,
+            r: 0.5
+        });
+        elements.push({
+            type: 'circle',
+            cx: 13,
+            cy: 6,
+            r: 0.5
+        });
+        // アンテナ
+        elements.push({
+            type: 'line',
+            x1: 10,
+            y1: 4,
+            x2: 10,
+            y2: 2
+        });
+        elements.push({
+            type: 'line',
+            x1: 14,
+            y1: 4,
+            x2: 14,
+            y2: 2
+        });
+        elements.push({
+            type: 'circle',
+            cx: 10,
+            cy: 2,
+            r: 0.5
+        });
+        elements.push({
+            type: 'circle',
+            cx: 14,
+            cy: 2,
+            r: 0.5
+        });
     } else {
         // デフォルト: プロンプトから抽象的な図形を生成
         const hash = prompt.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
@@ -614,33 +1056,15 @@ function displaySvg(svg) {
     codeSection.classList.remove('hidden');
 }
 
-// イベントリスナー
-generateBtn.addEventListener('click', () => {
-    const prompt = promptInput.value.trim();
-    if (!prompt) {
-        alert('アイコンの説明を入力してください');
-        return;
-    }
-    
-    currentPrompt = prompt;
-    const size = parseInt(sizeSlider.value);
-    const color = colorPicker.value;
-    const strokeWidth = parseFloat(strokeSlider.value);
-    
-    currentSvg = generateSvg(prompt, size, color, strokeWidth);
-    displaySvg(currentSvg);
-});
+// 元のイベントリスナーは下で統合されているため削除
 
 // サイズ変更
 sizeSlider.addEventListener('input', (e) => {
     const size = e.target.value;
     sizeDisplay.textContent = `${size}px`;
     
-    if (currentSvg && currentPrompt) {
-        const color = colorPicker.value;
-        const strokeWidth = parseFloat(strokeSlider.value);
-        currentSvg = generateSvg(currentPrompt, size, color, strokeWidth);
-        displaySvg(currentSvg);
+    if (currentPrompt) {
+        generateRealtime();
     }
 });
 
@@ -649,22 +1073,15 @@ strokeSlider.addEventListener('input', (e) => {
     const strokeWidth = e.target.value;
     strokeDisplay.textContent = `${strokeWidth}px`;
     
-    if (currentSvg && currentPrompt) {
-        const size = parseInt(sizeSlider.value);
-        const color = colorPicker.value;
-        currentSvg = generateSvg(currentPrompt, size, color, parseFloat(strokeWidth));
-        displaySvg(currentSvg);
+    if (currentPrompt) {
+        generateRealtime();
     }
 });
 
 // 色変更
 colorPicker.addEventListener('input', (e) => {
-    if (currentSvg && currentPrompt) {
-        const size = parseInt(sizeSlider.value);
-        const color = e.target.value;
-        const strokeWidth = parseFloat(strokeSlider.value);
-        currentSvg = generateSvg(currentPrompt, size, color, strokeWidth);
-        displaySvg(currentSvg);
+    if (currentPrompt) {
+        generateRealtime();
     }
 });
 
@@ -703,18 +1120,51 @@ copySvgBtn.addEventListener('click', async () => {
 // 再生成
 regenerateBtn.addEventListener('click', () => {
     if (currentPrompt) {
-        const size = parseInt(sizeSlider.value);
-        const color = colorPicker.value;
-        const strokeWidth = parseFloat(strokeSlider.value);
-        currentSvg = generateSvg(currentPrompt, size, color, strokeWidth);
-        displaySvg(currentSvg);
+        generateRealtime();
     }
 });
 
-// Enterキーで生成
+// リアルタイム生成関数
+function generateRealtime() {
+    const prompt = promptInput.value.trim();
+    if (prompt.length > 0) {
+        currentPrompt = prompt;
+        const size = parseInt(sizeSlider.value);
+        const color = colorPicker.value;
+        const strokeWidth = parseFloat(strokeSlider.value);
+        
+        currentSvg = generateSvg(prompt, size, color, strokeWidth);
+        displaySvg(currentSvg);
+    } else {
+        // 入力が空の場合はプレビューをクリア
+        svgPreview.innerHTML = '<p class="text-gray-400">ここに生成されたアイコンが表示されます</p>';
+        actionsSection.classList.add('hidden');
+        codeSection.classList.add('hidden');
+        currentSvg = null;
+        currentPrompt = '';
+    }
+}
+
+// リアルタイム入力検知
+promptInput.addEventListener('input', (e) => {
+    // デバウンス処理（300ms後に実行）
+    clearTimeout(realtimeTimer);
+    realtimeTimer = setTimeout(() => {
+        generateRealtime();
+    }, 300);
+});
+
+// Enterキーで即座に生成
 promptInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
-        generateBtn.click();
+        clearTimeout(realtimeTimer);
+        generateRealtime();
     }
+});
+
+// 生成ボタンは即座に実行
+generateBtn.addEventListener('click', () => {
+    clearTimeout(realtimeTimer);
+    generateRealtime();
 });
