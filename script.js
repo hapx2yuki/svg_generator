@@ -235,6 +235,262 @@ function generateFeatherStyleIcon(prompt) {
             type: 'path',
             d: 'M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z'
         });
+    } else if (promptLower.includes('モルモット') || promptLower.includes('guinea pig') || promptLower.includes('hamster') || promptLower.includes('ハムスター')) {
+        // モルモット/ハムスターのFeather風アイコン
+        // 体（楕円形）
+        elements.push({
+            type: 'ellipse',
+            cx: 12,
+            cy: 14,
+            rx: 8,
+            ry: 5
+        });
+        // 頭（円）
+        elements.push({
+            type: 'circle',
+            cx: 12,
+            cy: 8,
+            r: 4
+        });
+        // 左耳
+        elements.push({
+            type: 'circle',
+            cx: 9.5,
+            cy: 5.5,
+            r: 1.5
+        });
+        // 右耳
+        elements.push({
+            type: 'circle',
+            cx: 14.5,
+            cy: 5.5,
+            r: 1.5
+        });
+        // 左目
+        elements.push({
+            type: 'circle',
+            cx: 10.5,
+            cy: 7.5,
+            r: 0.5
+        });
+        // 右目
+        elements.push({
+            type: 'circle',
+            cx: 13.5,
+            cy: 7.5,
+            r: 0.5
+        });
+        // 鼻
+        elements.push({
+            type: 'circle',
+            cx: 12,
+            cy: 9,
+            r: 0.3
+        });
+        // 前足（左）
+        elements.push({
+            type: 'circle',
+            cx: 8,
+            cy: 17,
+            r: 1
+        });
+        // 前足（右）
+        elements.push({
+            type: 'circle',
+            cx: 16,
+            cy: 17,
+            r: 1
+        });
+    } else if (promptLower.includes('猫') || promptLower.includes('cat') || promptLower.includes('ネコ')) {
+        // 猫のFeather風アイコン
+        // 頭
+        elements.push({
+            type: 'circle',
+            cx: 12,
+            cy: 10,
+            r: 6
+        });
+        // 左耳
+        elements.push({
+            type: 'polygon',
+            points: '8 6 10 2 12 6'
+        });
+        // 右耳
+        elements.push({
+            type: 'polygon',
+            points: '12 6 14 2 16 6'
+        });
+        // 左目
+        elements.push({
+            type: 'circle',
+            cx: 10,
+            cy: 9,
+            r: 0.8
+        });
+        // 右目
+        elements.push({
+            type: 'circle',
+            cx: 14,
+            cy: 9,
+            r: 0.8
+        });
+        // 鼻
+        elements.push({
+            type: 'polygon',
+            points: '12 11 11.5 12 12.5 12'
+        });
+        // 口
+        elements.push({
+            type: 'path',
+            d: 'M10 13 Q12 15 14 13'
+        });
+        // 体
+        elements.push({
+            type: 'ellipse',
+            cx: 12,
+            cy: 18,
+            rx: 4,
+            ry: 3
+        });
+        // しっぽ
+        elements.push({
+            type: 'path',
+            d: 'M16 18 Q20 16 18 12'
+        });
+    } else if (promptLower.includes('犬') || promptLower.includes('dog') || promptLower.includes('イヌ')) {
+        // 犬のFeather風アイコン
+        // 頭
+        elements.push({
+            type: 'ellipse',
+            cx: 12,
+            cy: 9,
+            rx: 5,
+            ry: 4
+        });
+        // 左耳
+        elements.push({
+            type: 'ellipse',
+            cx: 8,
+            cy: 6,
+            rx: 2,
+            ry: 3
+        });
+        // 右耳
+        elements.push({
+            type: 'ellipse',
+            cx: 16,
+            cy: 6,
+            rx: 2,
+            ry: 3
+        });
+        // 鼻
+        elements.push({
+            type: 'ellipse',
+            cx: 12,
+            cy: 11,
+            rx: 3,
+            ry: 2
+        });
+        // 左目
+        elements.push({
+            type: 'circle',
+            cx: 10,
+            cy: 8,
+            r: 0.8
+        });
+        // 右目
+        elements.push({
+            type: 'circle',
+            cx: 14,
+            cy: 8,
+            r: 0.8
+        });
+        // 鼻の穴
+        elements.push({
+            type: 'circle',
+            cx: 12,
+            cy: 11,
+            r: 0.5
+        });
+        // 体
+        elements.push({
+            type: 'ellipse',
+            cx: 12,
+            cy: 17,
+            rx: 6,
+            ry: 4
+        });
+        // しっぽ
+        elements.push({
+            type: 'path',
+            d: 'M18 15 Q22 12 20 8'
+        });
+    } else if (promptLower.includes('うさぎ') || promptLower.includes('rabbit') || promptLower.includes('ウサギ')) {
+        // うさぎのFeather風アイコン
+        // 頭
+        elements.push({
+            type: 'circle',
+            cx: 12,
+            cy: 12,
+            r: 5
+        });
+        // 左耳
+        elements.push({
+            type: 'ellipse',
+            cx: 9,
+            cy: 4,
+            rx: 1.5,
+            ry: 4
+        });
+        // 右耳
+        elements.push({
+            type: 'ellipse',
+            cx: 15,
+            cy: 4,
+            rx: 1.5,
+            ry: 4
+        });
+        // 左目
+        elements.push({
+            type: 'circle',
+            cx: 10,
+            cy: 11,
+            r: 0.8
+        });
+        // 右目
+        elements.push({
+            type: 'circle',
+            cx: 14,
+            cy: 11,
+            r: 0.8
+        });
+        // 鼻
+        elements.push({
+            type: 'circle',
+            cx: 12,
+            cy: 13,
+            r: 0.3
+        });
+        // 口
+        elements.push({
+            type: 'path',
+            d: 'M11 14 Q12 15 13 14'
+        });
+        // 体
+        elements.push({
+            type: 'ellipse',
+            cx: 12,
+            cy: 19,
+            rx: 4,
+            ry: 3
+        });
+        // しっぽ
+        elements.push({
+            type: 'circle',
+            cx: 16,
+            cy: 19,
+            r: 1
+        });
     } else {
         // デフォルト: プロンプトから抽象的な図形を生成
         const hash = prompt.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
@@ -315,6 +571,9 @@ function createSvgElement(element) {
             const rx = attrs.rx ? ` rx="${attrs.rx}"` : '';
             const ry = attrs.ry ? ` ry="${attrs.ry}"` : '';
             svgElement = `<rect x="${attrs.x}" y="${attrs.y}" width="${attrs.width}" height="${attrs.height}"${rx}${ry}/>`;
+            break;
+        case 'ellipse':
+            svgElement = `<ellipse cx="${attrs.cx}" cy="${attrs.cy}" rx="${attrs.rx}" ry="${attrs.ry}"/>`;
             break;
         default:
             svgElement = '';
