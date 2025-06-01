@@ -14,153 +14,278 @@ const codeSection = document.getElementById('codeSection');
 
 let currentSvg = null;
 let currentPrompt = '';
-let currentPathData = null;
 
-// SVGパスを生成する関数（プロンプトから動的に生成）
-function generateSvgPath(prompt) {
-    // プロンプトを基にしたシンプルなアイコン生成ロジック
+// プロンプトからSVGパスを動的に生成する関数
+function generateIconFromPrompt(prompt) {
     const promptLower = prompt.toLowerCase();
+    const paths = [];
     
-    // 基本的な形状パターン
-    const shapes = {
-        circle: (cx = 12, cy = 12, r = 10) => {
-            return `M ${cx-r} ${cy} A ${r} ${r} 0 0 0 ${cx+r} ${cy} A ${r} ${r} 0 0 0 ${cx-r} ${cy}`;
-        },
-        square: (size = 16, x = 4, y = 4) => {
-            return `M ${x} ${y} h ${size} v ${size} h -${size} Z`;
-        },
-        triangle: (size = 20) => {
-            const height = size * 0.866;
-            return `M 12 ${(24-height)/2} L ${12+size/2} ${(24+height)/2} L ${12-size/2} ${(24+height)/2} Z`;
-        },
-        star: () => {
-            return 'M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z';
-        },
-        heart: () => {
-            return 'M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z';
-        },
-        arrow: (direction = 'right') => {
-            const paths = {
-                right: 'M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z',
-                left: 'M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z',
-                up: 'M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6 1.41 1.41z',
-                down: 'M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z'
-            };
-            return paths[direction] || paths.right;
-        },
-        plus: () => {
-            return 'M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z';
-        },
-        check: () => {
-            return 'M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z';
-        },
-        cross: () => {
-            return 'M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z';
-        }
-    };
+    // Font Awesome風の線画スタイルで生成
+    const strokeWidth = 2;
+    const viewBox = '0 0 24 24';
     
-    // プロンプトから形状を判定
-    if (promptLower.includes('円') || promptLower.includes('circle') || promptLower.includes('丸')) {
-        return { path: shapes.circle(), viewBox: '0 0 24 24' };
-    } else if (promptLower.includes('四角') || promptLower.includes('square') || promptLower.includes('正方形')) {
-        return { path: shapes.square(), viewBox: '0 0 24 24' };
-    } else if (promptLower.includes('三角') || promptLower.includes('triangle')) {
-        return { path: shapes.triangle(), viewBox: '0 0 24 24' };
+    // キーワードに基づいてSVGパスを動的に生成
+    if (promptLower.includes('ハート') || promptLower.includes('heart') || promptLower.includes('愛') || promptLower.includes('love')) {
+        // ハートの輪郭を線で描画
+        paths.push({
+            d: 'M12 21C12 21 3 13.5 3 8.5C3 5.5 5.5 3 8.5 3C10.04 3 11.54 3.82 12 5C12.46 3.82 13.96 3 15.5 3C18.5 3 21 5.5 21 8.5C21 13.5 12 21 12 21Z',
+            fill: 'none',
+            stroke: true
+        });
     } else if (promptLower.includes('星') || promptLower.includes('star')) {
-        return { path: shapes.star(), viewBox: '0 0 24 24' };
-    } else if (promptLower.includes('ハート') || promptLower.includes('heart') || promptLower.includes('愛')) {
-        return { path: shapes.heart(), viewBox: '0 0 24 24' };
-    } else if (promptLower.includes('矢印') || promptLower.includes('arrow')) {
-        if (promptLower.includes('左') || promptLower.includes('left')) {
-            return { path: shapes.arrow('left'), viewBox: '0 0 24 24' };
-        } else if (promptLower.includes('上') || promptLower.includes('up')) {
-            return { path: shapes.arrow('up'), viewBox: '0 0 24 24' };
-        } else if (promptLower.includes('下') || promptLower.includes('down')) {
-            return { path: shapes.arrow('down'), viewBox: '0 0 24 24' };
-        }
-        return { path: shapes.arrow('right'), viewBox: '0 0 24 24' };
-    } else if (promptLower.includes('プラス') || promptLower.includes('plus') || promptLower.includes('+')) {
-        return { path: shapes.plus(), viewBox: '0 0 24 24' };
-    } else if (promptLower.includes('チェック') || promptLower.includes('check') || promptLower.includes('完了')) {
-        return { path: shapes.check(), viewBox: '0 0 24 24' };
-    } else if (promptLower.includes('×') || promptLower.includes('x') || promptLower.includes('閉じる') || promptLower.includes('close')) {
-        return { path: shapes.cross(), viewBox: '0 0 24 24' };
-    }
-    
-    // より複雑なアイコンの生成
-    return generateComplexIcon(prompt);
-}
-
-// より複雑なアイコンを生成
-function generateComplexIcon(prompt) {
-    const promptLower = prompt.toLowerCase();
-    
-    // キーワードベースでパスを生成
-    if (promptLower.includes('家') || promptLower.includes('home') || promptLower.includes('ホーム')) {
-        return {
-            path: 'M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z',
-            viewBox: '0 0 24 24'
-        };
-    } else if (promptLower.includes('メール') || promptLower.includes('mail') || promptLower.includes('email')) {
-        return {
-            path: 'M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z',
-            viewBox: '0 0 24 24'
-        };
+        // 5芒星の線画
+        paths.push({
+            d: 'M12 2L14.09 8.26L21 9.27L16.5 13.77L17.59 20.98L12 17.77L6.41 20.98L7.5 13.77L3 9.27L9.91 8.26L12 2Z',
+            fill: 'none',
+            stroke: true
+        });
+    } else if (promptLower.includes('家') || promptLower.includes('home') || promptLower.includes('ホーム') || promptLower.includes('house')) {
+        // 家の線画
+        paths.push({
+            d: 'M3 12L5 10V20C5 20.55 5.45 21 6 21H10V15C10 14.45 10.45 14 11 14H13C13.55 14 14 14.45 14 15V21H18C18.55 21 19 20.55 19 20V10L21 12L12 3L3 12Z',
+            fill: 'none',
+            stroke: true
+        });
+    } else if (promptLower.includes('メール') || promptLower.includes('mail') || promptLower.includes('email') || promptLower.includes('封筒')) {
+        // メール/封筒の線画
+        paths.push({
+            d: 'M4 4H20C21.1 4 22 4.9 22 6V18C22 19.1 21.1 20 20 20H4C2.9 20 2 19.1 2 18V6C2 4.9 2.9 4 4 4Z',
+            fill: 'none',
+            stroke: true
+        });
+        paths.push({
+            d: 'M22 6L12 13L2 6',
+            fill: 'none',
+            stroke: true
+        });
     } else if (promptLower.includes('電話') || promptLower.includes('phone') || promptLower.includes('call')) {
-        return {
-            path: 'M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z',
-            viewBox: '0 0 24 24'
-        };
-    } else if (promptLower.includes('時計') || promptLower.includes('clock') || promptLower.includes('time')) {
-        return {
-            path: 'M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z',
-            viewBox: '0 0 24 24'
-        };
-    } else if (promptLower.includes('カメラ') || promptLower.includes('camera') || promptLower.includes('写真')) {
-        return {
-            path: 'M12 15.2c1.74 0 3.2-1.46 3.2-3.2S13.74 8.8 12 8.8 8.8 10.26 8.8 12s1.46 3.2 3.2 3.2zM9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z',
-            viewBox: '0 0 24 24'
-        };
-    } else if (promptLower.includes('音楽') || promptLower.includes('music') || promptLower.includes('音符')) {
-        return {
-            path: 'M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z',
-            viewBox: '0 0 24 24'
-        };
-    } else if (promptLower.includes('本') || promptLower.includes('book') || promptLower.includes('読書')) {
-        return {
-            path: 'M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z',
-            viewBox: '0 0 24 24'
-        };
+        // 電話の線画
+        paths.push({
+            d: 'M22 16.92V19.92C22 20.48 21.54 20.93 20.96 20.92C10.65 20.47 3.53 13.35 3.08 3.04C3.07 2.46 3.52 2 4.08 2H7.08C7.6 2 8.04 2.38 8.14 2.88C8.24 3.37 8.34 3.85 8.47 4.33C8.62 4.87 8.46 5.46 8.06 5.85L6.62 7.29C7.82 9.62 9.38 11.18 11.71 12.38L13.15 10.94C13.54 10.54 14.13 10.38 14.67 10.53C15.15 10.66 15.63 10.76 16.12 10.86C16.62 10.96 17 11.4 17 11.92V14.92C17 15.48 16.54 15.93 15.96 15.92C15.65 15.92 15.34 15.91 15.04 15.88',
+            fill: 'none',
+            stroke: true
+        });
+    } else if (promptLower.includes('設定') || promptLower.includes('gear') || promptLower.includes('歯車') || promptLower.includes('setting')) {
+        // 歯車の線画
+        const teeth = 8;
+        let path = '';
+        for (let i = 0; i < teeth; i++) {
+            const angle = (i * 360 / teeth) * Math.PI / 180;
+            const nextAngle = ((i + 1) * 360 / teeth) * Math.PI / 180;
+            const innerRadius = 7;
+            const outerRadius = 11;
+            
+            if (i === 0) {
+                path += `M ${12 + Math.cos(angle) * outerRadius} ${12 + Math.sin(angle) * outerRadius} `;
+            }
+            
+            const midAngle = angle + (nextAngle - angle) * 0.3;
+            const midAngle2 = angle + (nextAngle - angle) * 0.7;
+            
+            path += `L ${12 + Math.cos(midAngle) * outerRadius} ${12 + Math.sin(midAngle) * outerRadius} `;
+            path += `L ${12 + Math.cos(midAngle2) * innerRadius} ${12 + Math.sin(midAngle2) * innerRadius} `;
+            path += `L ${12 + Math.cos(nextAngle) * innerRadius} ${12 + Math.sin(nextAngle) * innerRadius} `;
+        }
+        path += 'Z';
+        
+        paths.push({
+            d: path,
+            fill: 'none',
+            stroke: true
+        });
+        // 中心の円
+        paths.push({
+            d: 'M12 9A3 3 0 1 0 12 15A3 3 0 1 0 12 9Z',
+            fill: 'none',
+            stroke: true
+        });
+    } else if (promptLower.includes('検索') || promptLower.includes('search') || promptLower.includes('虫眼鏡')) {
+        // 検索/虫眼鏡の線画
+        paths.push({
+            d: 'M11 19C15.418 19 19 15.418 19 11C19 6.582 15.418 3 11 3C6.582 3 3 6.582 3 11C3 15.418 6.582 19 11 19Z',
+            fill: 'none',
+            stroke: true
+        });
+        paths.push({
+            d: 'M21 21L16.65 16.65',
+            fill: 'none',
+            stroke: true
+        });
+    } else if (promptLower.includes('ユーザー') || promptLower.includes('user') || promptLower.includes('人') || promptLower.includes('person')) {
+        // ユーザーアイコンの線画
+        paths.push({
+            d: 'M12 11C14.21 11 16 9.21 16 7C16 4.79 14.21 3 12 3C9.79 3 8 4.79 8 7C8 9.21 9.79 11 12 11Z',
+            fill: 'none',
+            stroke: true
+        });
+        paths.push({
+            d: 'M6 21V19C6 17.35 10 16 12 16C14 16 18 17.35 18 19V21',
+            fill: 'none',
+            stroke: true
+        });
+    } else if (promptLower.includes('カート') || promptLower.includes('cart') || promptLower.includes('ショッピング') || promptLower.includes('買い物')) {
+        // ショッピングカートの線画
+        paths.push({
+            d: 'M9 22C9.55 22 10 21.55 10 21C10 20.45 9.55 20 9 20C8.45 20 8 20.45 8 21C8 21.55 8.45 22 9 22Z',
+            fill: 'none',
+            stroke: true
+        });
+        paths.push({
+            d: 'M20 22C20.55 22 21 21.55 21 21C21 20.45 20.55 20 20 20C19.45 20 19 20.45 19 21C19 21.55 19.45 22 20 22Z',
+            fill: 'none',
+            stroke: true
+        });
+        paths.push({
+            d: 'M1 1H5L7.68 14.39C7.77 14.82 8.17 15.14 8.61 15.14H19.4C19.83 15.14 20.23 14.82 20.32 14.39L22 6H6',
+            fill: 'none',
+            stroke: true
+        });
+    } else if (promptLower.includes('チェック') || promptLower.includes('check') || promptLower.includes('完了') || promptLower.includes('ok')) {
+        // チェックマークの線画
+        paths.push({
+            d: 'M5 12L10 17L20 7',
+            fill: 'none',
+            stroke: true
+        });
+    } else if (promptLower.includes('×') || promptLower.includes('x') || promptLower.includes('閉じる') || promptLower.includes('close') || promptLower.includes('バツ')) {
+        // ×マークの線画
+        paths.push({
+            d: 'M6 6L18 18',
+            fill: 'none',
+            stroke: true
+        });
+        paths.push({
+            d: 'M18 6L6 18',
+            fill: 'none',
+            stroke: true
+        });
+    } else if (promptLower.includes('プラス') || promptLower.includes('plus') || promptLower.includes('+') || promptLower.includes('追加')) {
+        // プラスマークの線画
+        paths.push({
+            d: 'M12 5V19',
+            fill: 'none',
+            stroke: true
+        });
+        paths.push({
+            d: 'M5 12H19',
+            fill: 'none',
+            stroke: true
+        });
+    } else if (promptLower.includes('矢印') || promptLower.includes('arrow')) {
+        // 矢印の線画
+        if (promptLower.includes('左') || promptLower.includes('left')) {
+            paths.push({
+                d: 'M19 12H5',
+                fill: 'none',
+                stroke: true
+            });
+            paths.push({
+                d: 'M12 19L5 12L12 5',
+                fill: 'none',
+                stroke: true
+            });
+        } else if (promptLower.includes('上') || promptLower.includes('up')) {
+            paths.push({
+                d: 'M12 19V5',
+                fill: 'none',
+                stroke: true
+            });
+            paths.push({
+                d: 'M5 12L12 5L19 12',
+                fill: 'none',
+                stroke: true
+            });
+        } else if (promptLower.includes('下') || promptLower.includes('down')) {
+            paths.push({
+                d: 'M12 5V19',
+                fill: 'none',
+                stroke: true
+            });
+            paths.push({
+                d: 'M19 12L12 19L5 12',
+                fill: 'none',
+                stroke: true
+            });
+        } else {
+            // デフォルトは右矢印
+            paths.push({
+                d: 'M5 12H19',
+                fill: 'none',
+                stroke: true
+            });
+            paths.push({
+                d: 'M12 5L19 12L12 19',
+                fill: 'none',
+                stroke: true
+            });
+        }
+    } else if (promptLower.includes('円') || promptLower.includes('circle') || promptLower.includes('丸')) {
+        // 円の線画
+        paths.push({
+            d: 'M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2Z',
+            fill: 'none',
+            stroke: true
+        });
+    } else if (promptLower.includes('四角') || promptLower.includes('square') || promptLower.includes('正方形')) {
+        // 四角形の線画
+        paths.push({
+            d: 'M4 4H20V20H4V4Z',
+            fill: 'none',
+            stroke: true
+        });
+    } else if (promptLower.includes('三角') || promptLower.includes('triangle')) {
+        // 三角形の線画
+        paths.push({
+            d: 'M12 2L2 20H22L12 2Z',
+            fill: 'none',
+            stroke: true
+        });
+    } else {
+        // デフォルト: プロンプトの文字から生成される抽象的な形状
+        const hash = prompt.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+        const points = [];
+        const numPoints = 3 + (hash % 5);
+        
+        for (let i = 0; i < numPoints; i++) {
+            const angle = (i / numPoints) * Math.PI * 2;
+            const radius = 8 + (hash * (i + 1) % 4);
+            const x = 12 + Math.cos(angle) * radius;
+            const y = 12 + Math.sin(angle) * radius;
+            points.push(`${x},${y}`);
+        }
+        
+        paths.push({
+            d: `M${points[0]} ${points.slice(1).map(p => `L${p}`).join(' ')} Z`,
+            fill: 'none',
+            stroke: true
+        });
     }
-    
-    // デフォルト: プロンプトの文字数に基づいて生成されるランダムな形状
-    const hash = prompt.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-    const defaultShapes = [
-        'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z', // 円
-        'M4 4h16v16H4z', // 正方形
-        'M12 2l10 20H2z', // 三角形
-        'M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z' // 星
-    ];
     
     return {
-        path: defaultShapes[hash % defaultShapes.length],
-        viewBox: '0 0 24 24'
+        paths,
+        viewBox,
+        strokeWidth
     };
 }
 
 // SVGを生成
 function generateSvg(prompt, size, color) {
-    // 新しい動的生成ロジックを使用
-    const pathData = generateSvgPath(prompt);
-    currentPathData = pathData;
+    const iconData = generateIconFromPrompt(prompt);
+    
+    const pathElements = iconData.paths.map(path => {
+        if (path.stroke) {
+            return `<path d="${path.d}" fill="none" stroke="${color}" stroke-width="${iconData.strokeWidth}" stroke-linecap="round" stroke-linejoin="round"/>`;
+        } else {
+            return `<path d="${path.d}" fill="${color}"/>`;
+        }
+    }).join('\n            ');
     
     const svg = `
         <svg xmlns="http://www.w3.org/2000/svg" 
              width="${size}" 
              height="${size}" 
-             viewBox="${pathData.viewBox}"
-             fill="${color}">
-            <path d="${pathData.path}"/>
+             viewBox="${iconData.viewBox}">
+            ${pathElements}
         </svg>
     `;
     
